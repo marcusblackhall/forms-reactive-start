@@ -21,4 +21,8 @@ export class AppComponent implements OnInit {
 
   signupForm: FormGroup;
 
+  onSubmit(){
+    console.log(this.signupForm);
+  }
+
 }
