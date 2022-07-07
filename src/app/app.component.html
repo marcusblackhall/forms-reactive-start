@@ -5,17 +5,31 @@
         <div formGroupName="userData">
           <div class="form-group">
             <label for="username">Username</label>
-            <input type="text" id="username" formControlName="username" class="form-control">
-            <span class="help-block"
-              *ngIf="!signupForm.get('userData.username').valid && 
-              signupForm.get('userData.username').touched">Username is invalid</span>
+            <input type="text" id="username" formControlName="username" required class="form-control">
+            <span class="help-block" *ngIf="!signupForm.get('userData.username').valid && 
+              signupForm.get('userData.username').touched">
+              <span *ngIf="signupForm.get('userData.username').errors['nameIsForbidden']">Name is forbidden</span>
+              <span *ngIf="signupForm.get('userData.username').errors['required']">Name must be entered</span>
+            </span>
           </div>
           <div class="form-group">
+            <p>{{signupForm.get('userData.email').valid}}</p>
             <label for="email">email</label>
             <input type="text" id="email" formControlName="email" class="form-control">
-            <span class="help-block" *ngIf="!signupForm.get('userData.email').valid &&
-             signupForm.get('userData.email').touched">Email is
-              not valid</span>
+
+            <span class="help-block" *ngIf="!signupForm.get('userData.email').valid && 
+              signupForm.get('userData.email').touched">
+              <span *ngIf="
+              signupForm.get('userData.email').errors &&
+              signupForm.get('userData.email').errors['required'];else emailexclude">Email must be entered</span>
+              <ng-template #emailexclude>
+                <span 
+                *ngIf=" signupForm.get('userData.email').errors  &&
+                
+
+                signupForm.get('userData.email').errors['emailIsForbidden']">This email is invalid</span>
+              </ng-template>
+            </span>
           </div>
         </div>
         <div class="radio" *ngFor="let gender of genders">
@@ -25,19 +39,14 @@
         </div>
         <div formArrayName="hobbies">
           <h4>Hobbies</h4>
-          <button class="btn btn-default" type="button"
-          (click)="onAddHobby()"
-          >Add hobby</button>
-          <div class="form-group"
-          *ngFor="let hobbyControl of getControls(); let i = index"
-          >
-            <input type="text" 
-              class="form-control" 
-              [formControlName]="i"
-            >
+          <button class="btn btn-default" type="button" (click)="onAddHobby()">Add hobby</button>
+          <div class="form-group" *ngFor="let hobbyControl of getControls(); let i = index">
+            <input type="text" class="form-control" [formControlName]="i">
           </div>
         </div>
-        <button class="btn btn-primary" type="submit">Submit</button>
+        <button class="btn btn-primary" 
+        [disabled]="!signupForm.valid"
+        type="submit">Submit</button>
       </form>
     </div>
   </div>
